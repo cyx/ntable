@@ -1,6 +1,8 @@
 require File.join(File.dirname(__FILE__), 'ntable', 'compat-1.8.6')
 
 class Ntable < BasicObject
+  VERSION = '0.0.1'
+
   def initialize(state = :closed, parent = nil)
     @_parent = parent
     @_properties = {}
@@ -8,7 +10,7 @@ class Ntable < BasicObject
   end
 
   def inspect
-    "#<Ntable \n\t\t@_properties=#{@_properties.inspect}, \n\t\t@_state=#{@_state.inspect}>"
+    "#<Ntable @_properties=#{@_properties.inspect}, @_state=#{@_state.inspect}>"
   end
 
   def __state__=(state)
@@ -26,13 +28,10 @@ private
     else
       if @_properties.has_key?(meth)
         @_properties[meth]
-      elsif _open?
+      elsif __state__ == :open
         @_properties[meth] = ::Ntable.new(@_state, self)
       end
     end
   end
-
-  def _open?()   __state__ == :open   end
-  def _closed?() __state__ == :closed end
 end
 

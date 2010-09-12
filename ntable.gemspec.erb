@@ -1,6 +1,7 @@
+<%- require './lib/ntable' %>
 Gem::Specification.new do |s|
   s.name = 'ohm'
-  s.version = '0.0.1'
+  s.version = <%= Ntable::VERSION %>
   s.summary = %{Nestable Table for configuration}
   s.date = %q{2010-09-13}
   s.author = "Cyril David"
@@ -14,5 +15,8 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.has_rdoc = false
+
+  s.add_development_dependency "cutest"
+  s.add_development_dependency "sinatra"
 end
 
