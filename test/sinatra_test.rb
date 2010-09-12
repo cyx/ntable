@@ -5,11 +5,10 @@ class App < Sinatra::Base
     @_monk ||= Ntable.new
   end
 
-  def self.conf
-    monk.__state__ = :open
-    yield monk
-  ensure
-    monk.__state__ = :closed
+  def self.conf(&block)
+    monk.open! do
+      block.call(monk)
+    end
   end
 
   def self.reset_monk

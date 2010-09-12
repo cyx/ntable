@@ -3,35 +3,40 @@ require File.join(File.dirname(__FILE__), 'ntable', 'compat-1.8.6')
 class Ntable < BasicObject
   VERSION = '0.0.1'
 
-  def initialize(state = :closed, parent = nil)
+  def initialize(parent = nil)
     @_parent = parent
     @_properties = {}
-    @_state = state
+    @_open = false
   end
 
   def inspect
-    "#<Ntable @_properties=#{@_properties.inspect}, @_state=#{@_state.inspect}>"
+    "#<Ntable @_properties=#{@_properties.inspect}, @_open=#{@_open.inspect}>"
   end
 
-  def __state__=(state)
-    @_state = state
+  def open!
+    @_open = true
+    yield
+  ensure
+    @_open = false
   end
 
-  def __state__
-    @_parent ? @_parent.__state__ : @_state
+  def open?
+    @_parent ? @_parent.open? : @_open
   end
 
 private
+
   def method_missing(meth, *args, &blk)
-    if att = meth[/^(.*?)=/, 1]
+    att = meth[/^(.*?)=/, 1]
+
+    if att
       @_properties[att.to_sym] = args.first
     else
       if @_properties.has_key?(meth)
         @_properties[meth]
-      elsif __state__ == :open
-        @_properties[meth] = ::Ntable.new(@_state, self)
+      elsif open?
+        @_properties[meth] = ::Ntable.new(self)
       end
     end
   end
 end
-
