@@ -1,0 +1,4 @@
+# default.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+batch -v0.0.2
+cutest -v0.0.1
+sinatra -v1.0
